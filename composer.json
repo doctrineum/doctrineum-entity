@@ -1,0 +1,36 @@
+{
+  "name": "doctrineum/entity",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Jaroslav Týc",
+      "homepage": "https://www.jaroslavtyc.com",
+      "role": "Original author"
+    }
+  ],
+  "type": "project",
+  "description": "Entity tests",
+  "keywords": [
+    "php",
+    "object",
+    "Doctrine",
+    "entity",
+    "test"
+  ],
+  "homepage": "https://github.com/jaroslavtyc/doctrineum-entity",
+  "autoload": {
+    "psr-4": {
+      "Doctrineum\\": "Doctrineum/"
+    }
+  },
+  "require": {
+    "php": ">=5.4"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~4.4",
+    "mockery/mockery": "dev-master",
+    "doctrine/orm": "2.*"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}
