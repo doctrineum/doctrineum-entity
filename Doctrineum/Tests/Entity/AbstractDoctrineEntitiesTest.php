@@ -23,7 +23,8 @@ abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
     {
         $this->checkSqlExtensionAvailability();
 
-        $paths = $this->getDirsWithEntities();
+        $paths = (array)$this->getDirsWithEntities();
+        $this->checkPathsExistence($paths);
         $config = Setup::createAnnotationMetadataConfiguration($paths, true /* dev mode */);
         $cache = new \Doctrine\Common\Cache\ArrayCache();
         $config->setMetadataCacheImpl($cache);
@@ -44,6 +45,14 @@ abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
         $helperSet = ConsoleRunner::createHelperSet($this->entityManager);
         $this->application = \Doctrine\ORM\Tools\Console\ConsoleRunner::createApplication($helperSet);
         $this->application->setAutoExit(false);
+    }
+
+    protected function checkPathsExistence(array $paths)
+    {
+        self::assertNotEmpty($paths, 'No dirs with entities-to-test given');
+        foreach ($paths as $path) {
+            self::assertTrue(is_dir($path), "Given dir {$path} with entities has not been found");
+        }
     }
 
     /**
@@ -96,7 +105,7 @@ abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
         $this->I_can_create_schema();
         $proxies = $this->I_can_generate_proxies();
 
-        foreach ($originalEntities = $this->createEntitiesToPersist() as $entityToPersist) {
+        foreach ($originalEntities = (array)$this->createEntitiesToPersist() as $entityToPersist) {
             $this->entityManager->persist($entityToPersist);
         }
         $this->entityManager->flush();
@@ -106,7 +115,7 @@ abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
 
         $this->entityManager->clear(); // clear disconnects all entities, but also by them containing entities
 
-        $fetchedEntities = $this->fetchEntitiesByOriginals($originalEntities, $this->entityManager);
+        $fetchedEntities = (array)$this->fetchEntitiesByOriginals($originalEntities, $this->entityManager);
         self::assertCount(
             $countOfOriginals = count($originalEntities),
             $fetchedEntities,
