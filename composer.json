@@ -9,7 +9,7 @@
     }
   ],
   "type": "project",
-  "description": "Entity tests",
+  "description": "Doctrine entity tests against real SQL persistence",
   "keywords": [
     "php",
     "object",
