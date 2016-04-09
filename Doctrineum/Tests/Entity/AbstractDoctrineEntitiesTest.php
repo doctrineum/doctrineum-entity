@@ -294,7 +294,16 @@ abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
      * @param EntityManager $entityManager
      * @return array|Entity[]
      */
-    abstract protected function fetchEntitiesByOriginals(array $originalEntities, EntityManager $entityManager);
+    protected function fetchEntitiesByOriginals(array $originalEntities, EntityManager $entityManager)
+    {
+        $fetched = [];
+        foreach ($originalEntities as $originalEntity) {
+            /** @var Entity $originalEntity */
+            $fetched[] = $entityManager->getRepository(get_class($originalEntity))->find($originalEntity->getId());
+        }
+
+        return $fetched;
+    }
 
     /**
      * @return string
