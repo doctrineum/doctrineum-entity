@@ -259,11 +259,13 @@ abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
                 }
             )
         );
+        sort($proxyFileNames);
 
         $expectedProxyFileNames = [];
         foreach ((array)$this->getExpectedEntityClasses() as $expectedEntityClass) {
             $expectedProxyFileNames[] = $this->assembleProxyNameByClass($expectedEntityClass);
         }
+        sort($expectedProxyFileNames);
 
         self::assertEquals(
             $expectedProxyFileNames,
