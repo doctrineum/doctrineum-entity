@@ -145,11 +145,8 @@ abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
                     "Fetched entities of class {$className} miss entity of ID {$id}"
                 );
                 $fetched = $fetchedGroup[$id];
-                self::assertEquals(
-                    $original,
-                    $fetched,
-                    'Persisted and fetched-back entity should has same content'
-                );
+                self::assertInstanceOf(get_class($original), $fetched, 'Fetched entity has to be of same class as original, even if proxy');
+                self::assertDoctrineEquals($original, $fetched);
                 self::assertNotSame(
                     $original,
                     $fetched,
@@ -161,6 +158,7 @@ abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
             0,
             $unusedProxies = array_diff($proxies, $usedProxies),
             'Entities of following proxies have not been tested for persistence: ' . implode(',', $unusedProxies)
+            . '; add them to "createEntitiesToPersist"'
         );
 
         $this->I_can_drop_schema();
@@ -199,6 +197,44 @@ abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
         }
 
         return $grouped;
+    }
+
+    protected static function assertDoctrineEquals($original, $fetched, $message = 'Persisted and fetched-back value be the same')
+    {
+        if (!is_object($original)) {
+            self::assertEquals($original, $fetched, $message);
+
+            return;
+        }
+
+        $originalReflection = new \ReflectionClass($original);
+        foreach ($originalReflection->getProperties() as $property) {
+            $getter = 'get' . ucfirst($property->getName());
+            if (!$originalReflection->hasMethod($getter)) {
+                continue;
+            }
+
+            $getterReflection = $originalReflection->getMethod($getter);
+            if (!$getterReflection->isPublic()
+                || $originalReflection->getMethod($getter)->getNumberOfRequiredParameters() > 0
+            ) {
+                continue;
+            }
+
+            $originalValue = $original->$getter();
+            $fetchedValue = $fetched->$getter();
+            if (is_object($originalValue)) {
+                self::assertInstanceOf(get_class($originalValue), $fetchedValue);
+            } else if ($originalValue !== null
+                || !is_object($fetchedValue)
+                || !($fetchedValue instanceof \Doctrine\ORM\PersistentCollection)
+            ) {
+                self::assertEquals($originalValue, $fetchedValue);
+            } else {
+                self::assertNull($originalValue);
+                self::assertCount(0, $fetchedValue); // \Doctrine\ORM\PersistentCollection
+            }
+        }
     }
 
     private function I_can_create_schema()
