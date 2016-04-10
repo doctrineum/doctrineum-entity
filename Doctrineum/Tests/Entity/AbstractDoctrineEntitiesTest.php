@@ -240,7 +240,11 @@ abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
     private function I_can_create_schema()
     {
         $exitCode = $this->application->run(new StringInput('orm:schema-tool:create'), $output = new DummyOutput());
-        self::assertSame(0, $exitCode, $output->fetch());
+        self::assertSame(
+            0,
+            $exitCode,
+            'Creation of schema failed: ' . "\n" . $output->fetch()
+        );
     }
 
     private function I_can_generate_proxies()
