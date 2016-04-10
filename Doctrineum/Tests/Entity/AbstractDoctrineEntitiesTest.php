@@ -270,7 +270,11 @@ abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
         self::assertEquals(
             $expectedProxyFileNames,
             $proxyFileNames,
-            'Generated proxies do not match to expected ones. Did you annotated them all as @Entity ?'
+            'Generated proxies do not match to expected ones.'
+            . (count($expectedProxyFileNames) > count($proxyFileNames)
+                ? 'Did you annotated them all as @Entity ?'
+                : 'Have you listed them all by getExpectedEntityClasses() ?'
+            )
         );
 
         return $expectedProxyFileNames;
