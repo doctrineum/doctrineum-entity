@@ -19,11 +19,6 @@ class DoctrineEntityUnknownSqlDriverNegativeTest extends AbstractDoctrineEntitie
         throw new \LogicException('Should not reach this code');
     }
 
-    protected function getExpectedEntityClasses()
-    {
-        throw new \LogicException('Should not reach this code');
-    }
-
     protected function createEntitiesToPersist()
     {
         throw new \LogicException('Should not reach this code');

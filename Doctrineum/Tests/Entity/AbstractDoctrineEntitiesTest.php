@@ -103,7 +103,8 @@ abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
     public function I_can_persist_and_fetch_entities()
     {
         $this->I_can_create_schema();
-        $proxies = $this->I_can_generate_proxies();
+        $originalEntities = (array)$this->createEntitiesToPersist();
+        $proxies = $this->I_can_generate_proxies($originalEntities);
 
         foreach ($originalEntities = (array)$this->createEntitiesToPersist() as $entityToPersist) {
             $this->entityManager->persist($entityToPersist);
@@ -259,7 +260,7 @@ abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    private function I_can_generate_proxies()
+    private function I_can_generate_proxies(array $originalEntities)
     {
         $exitCode = $this->application->run(
             new StringInput('orm:generate:proxies ' . $this->getProxiesUniqueTempDir()),
@@ -278,7 +279,7 @@ abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
         sort($proxyFileNames);
 
         $expectedProxyFileNames = [];
-        foreach ((array)$this->getExpectedEntityClasses() as $expectedEntityClass) {
+        foreach ((array)$this->extractUniqueEntityClasses($originalEntities) as $expectedEntityClass) {
             $expectedProxyFileNames[] = $this->assembleProxyNameByClass($expectedEntityClass);
         }
         sort($expectedProxyFileNames);
@@ -302,14 +303,23 @@ abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return string|string[]|array
-     */
-    abstract protected function getExpectedEntityClasses();
-
-    /**
      * @return array|Entity[]
      */
     abstract protected function createEntitiesToPersist();
+
+    /**
+     * @param array|Entity[] $instances
+     * @return array|string[]
+     */
+    protected function extractUniqueEntityClasses(array $instances)
+    {
+        $classes = [];
+        foreach ($instances as $instance) {
+            $classes[] = get_class($instance);
+        }
+
+        return array_unique($classes);
+    }
 
     /**
      * @param array $originalEntities

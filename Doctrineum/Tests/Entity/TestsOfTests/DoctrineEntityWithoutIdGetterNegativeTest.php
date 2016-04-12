@@ -25,13 +25,6 @@ class DoctrineEntityWithoutIdGetterNegativeTest extends AbstractDoctrineEntities
         ];
     }
 
-    protected function getExpectedEntityClasses()
-    {
-        return [
-            EntityWithoutIdGetter::getClass(),
-        ];
-    }
-
     protected function createEntitiesToPersist()
     {
         return [

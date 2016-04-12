@@ -13,13 +13,6 @@ class PositiveTestOfAbstractDoctrineEntitiesTest extends AbstractDoctrineEntitie
         ];
     }
 
-    protected function getExpectedEntityClasses()
-    {
-        return [
-            SomeValidEntity::getClass(),
-        ];
-    }
-
     protected function createEntitiesToPersist()
     {
         return [
