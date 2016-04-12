@@ -224,7 +224,19 @@ abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
             $originalValue = $original->$getter();
             $fetchedValue = $fetched->$getter();
             if (is_object($originalValue)) {
-                self::assertInstanceOf(get_class($originalValue), $fetchedValue);
+                self::assertInternalType('object', $fetchedValue);
+                if ($fetchedValue instanceof $originalValue) {
+                    self::assertInstanceOf(get_class($originalValue), $fetchedValue);
+                } else {
+                    $originalValueParent = get_parent_class($originalValue);
+                    self::assertNotNull($originalValueParent);
+                    self::assertSame($originalValueParent, get_parent_class($fetchedValue));
+                    $originalValueParentReflection = new \ReflectionClass($originalValueParent);
+                    self::assertContains(
+                        'MappedSuperclass(',
+                        $originalValueParentReflection->getDocComment()
+                    );
+                }
             } else if ($originalValue !== null
                 || !is_object($fetchedValue)
                 || !($fetchedValue instanceof \Doctrine\ORM\PersistentCollection)
