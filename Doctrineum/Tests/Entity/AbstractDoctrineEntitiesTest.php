@@ -25,7 +25,11 @@ abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
 
         $paths = (array)$this->getDirsWithEntities();
         $this->checkPathsExistence($paths);
-        $config = Setup::createAnnotationMetadataConfiguration($paths, true /* dev mode */);
+        $config = Setup::createAnnotationMetadataConfiguration(
+            $paths,
+            true /* dev mode */,
+            $this->getProxiesUniqueTempDir()
+        );
         $cache = new \Doctrine\Common\Cache\ArrayCache();
         $config->setMetadataCacheImpl($cache);
         $config->setQueryCacheImpl($cache);
@@ -263,7 +267,7 @@ abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
     private function I_can_generate_proxies(array $originalEntities)
     {
         $exitCode = $this->application->run(
-            new StringInput('orm:generate:proxies ' . $this->getProxiesUniqueTempDir()),
+            new StringInput('orm:generate:proxies'),
             $output = new DummyOutput()
         );
         self::assertSame(0, $exitCode, $output->fetch());
