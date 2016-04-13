@@ -213,21 +213,15 @@ abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
         }
 
         $originalReflection = new \ReflectionClass($original);
-        foreach ($originalReflection->getProperties() as $property) {
-            $getter = 'get' . ucfirst($property->getName());
-            if (!$originalReflection->hasMethod($getter)) {
-                continue;
-            }
-
-            $getterReflection = $originalReflection->getMethod($getter);
-            if (!$getterReflection->isPublic()
-                || $originalReflection->getMethod($getter)->getNumberOfRequiredParameters() > 0
+        foreach ($originalReflection->getMethods(\ReflectionMethod::IS_PUBLIC ^ \ReflectionMethod::IS_ABSTRACT) as $reflectionMethod) {
+            if ($reflectionMethod->getNumberOfRequiredParameters() > 0
+                || strpos($reflectionMethod->getName(), '__') === 0
             ) {
                 continue;
             }
 
-            $originalValue = $original->$getter();
-            $fetchedValue = $fetched->$getter();
+            $originalValue = $reflectionMethod->invoke($original);
+            $fetchedValue = $reflectionMethod->invoke($fetched);
             if (is_object($originalValue)) {
                 self::assertInternalType('object', $fetchedValue);
                 if ($fetchedValue instanceof $originalValue) {
