@@ -19,4 +19,10 @@ class PositiveTestOfAbstractDoctrineEntitiesTest extends AbstractDoctrineEntitie
             new SomeValidEntity('foo'),
         ];
     }
+
+    protected function tearDown()
+    {
+        self::assertNotEmpty($this->getQueries());
+        parent::tearDown();
+    }
 }

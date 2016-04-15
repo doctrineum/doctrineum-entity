@@ -1,6 +1,7 @@
 <?php
 namespace Doctrineum\Tests\Entity;
 
+use Doctrine\DBAL\Logging\DebugStack;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
 use Doctrine\ORM\Tools\Setup;
@@ -18,6 +19,9 @@ abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
 
     /** @var string */
     private $proxiesUniqueTempDir;
+
+    /** @var DebugStack */
+    private $sqlLogger;
 
     protected function setUp()
     {
@@ -38,6 +42,8 @@ abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
             $paths
         );
         $config->setMetadataDriverImpl($driver);
+        $this->sqlLogger = new DebugStack();
+        $config->setSQLLogger($this->sqlLogger);
         $this->entityManager = EntityManager::create(
             [
                 'driver' => $this->getSqlExtensionName(),
@@ -49,14 +55,6 @@ abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
         $helperSet = ConsoleRunner::createHelperSet($this->entityManager);
         $this->application = \Doctrine\ORM\Tools\Console\ConsoleRunner::createApplication($helperSet);
         $this->application->setAutoExit(false);
-    }
-
-    protected function checkPathsExistence(array $paths)
-    {
-        self::assertNotEmpty($paths, 'No dirs with entities-to-test given');
-        foreach ($paths as $path) {
-            self::assertTrue(is_dir($path), "Given dir {$path} with entities has not been found");
-        }
     }
 
     /**
@@ -74,9 +72,25 @@ abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
      */
     abstract protected function getDirsWithEntities();
 
+    protected function checkPathsExistence(array $paths)
+    {
+        self::assertNotEmpty($paths, 'No dirs with entities-to-test given');
+        foreach ($paths as $path) {
+            self::assertTrue(is_dir($path), "Given dir {$path} with entities has not been found");
+        }
+    }
+
     protected function getSqlExtensionName()
     {
         return 'pdo_sqlite';
+    }
+
+    /**
+     * @return array
+     */
+    protected function getQueries()
+    {
+        return $this->sqlLogger->queries;
     }
 
     protected function tearDown()
