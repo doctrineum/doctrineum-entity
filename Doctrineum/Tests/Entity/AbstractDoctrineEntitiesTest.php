@@ -207,7 +207,15 @@ abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
     protected static function assertDoctrineEquals($original, $fetched, $message = 'Persisted and fetched-back value be the same')
     {
         if (!is_object($original)) {
-            self::assertEquals($original, $fetched, $message);
+            if (!is_array($original)) {
+                self::assertEquals($original, $fetched, $message);
+            } else {
+                self::assertInternalType('array', $fetched);
+                self::assertCount(count($original), $fetched);
+                foreach ($original as $index => $originalValue) {
+                    self::assertDoctrineEquals($originalValue, $fetched[$index]);
+                }
+            }
 
             return;
         }
@@ -223,7 +231,12 @@ abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
             $originalValue = $reflectionMethod->invoke($original);
             $fetchedValue = $reflectionMethod->invoke($fetched);
             if (is_object($originalValue)) {
-                self::assertInternalType('object', $fetchedValue);
+                self::assertInternalType(
+                    'object',
+                    $fetchedValue,
+                    "Fetched value by {$reflectionMethod->getDeclaringClass()->getName()}::{$reflectionMethod->getname()}"
+                    . ' has to be at least object, original is ' . get_class($originalValue)
+                );
                 if ($fetchedValue instanceof $originalValue) {
                     self::assertInstanceOf(get_class($originalValue), $fetchedValue);
                 } else {
@@ -240,7 +253,11 @@ abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
                 || !is_object($fetchedValue)
                 || !($fetchedValue instanceof \Doctrine\ORM\PersistentCollection)
             ) {
-                self::assertEquals($originalValue, $fetchedValue);
+                if (is_array($fetchedValue)) {
+                    self::assertDoctrineEquals($originalValue, $fetchedValue, $message);
+                } else {
+                    self::assertEquals($originalValue, $fetchedValue);
+                }
             } else {
                 self::assertNull($originalValue);
                 self::assertCount(0, $fetchedValue); // \Doctrine\ORM\PersistentCollection
