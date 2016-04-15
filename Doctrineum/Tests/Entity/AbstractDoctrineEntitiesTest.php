@@ -237,18 +237,20 @@ abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
         $originalReflection = new \ReflectionClass($original);
         foreach ($originalReflection->getMethods(\ReflectionMethod::IS_PUBLIC ^ \ReflectionMethod::IS_ABSTRACT) as $reflectionMethod) {
             if ($reflectionMethod->getNumberOfRequiredParameters() > 0
+                || $reflectionMethod->getName() === 'getClass'
                 || strpos($reflectionMethod->getName(), '__') === 0
             ) {
                 continue;
             }
+            $valueGetter = $reflectionMethod->getName(); // can not invoke it by reflection method because of Proxy
 
-            $originalValue = $reflectionMethod->invoke($original);
-            $fetchedValue = $reflectionMethod->invoke($fetched);
+            $originalValue = $original->$valueGetter();
+            $fetchedValue = $fetched->$valueGetter();
             if (is_object($originalValue)) {
                 self::assertInternalType(
                     'object',
                     $fetchedValue,
-                    "Fetched value by {$reflectionMethod->getDeclaringClass()->getName()}::{$reflectionMethod->getname()}"
+                    'Fetched value by ' . get_class($fetched) . "::{$reflectionMethod->getname()}"
                     . ' has to be at least object, original is ' . get_class($originalValue)
                 );
                 if ($fetchedValue instanceof $originalValue) {
