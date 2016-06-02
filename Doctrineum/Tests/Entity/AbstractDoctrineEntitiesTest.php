@@ -250,7 +250,7 @@ abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
                 self::assertInternalType(
                     'object',
                     $fetchedValue,
-                    'Fetched value by ' . get_class($fetched) . "::{$reflectionMethod->getname()}"
+                    'Fetched value by ' . get_class($fetched) . "::{$reflectionMethod->getName()}"
                     . ' has to be at least object, original is ' . get_class($originalValue)
                 );
                 if ($fetchedValue instanceof $originalValue) {
