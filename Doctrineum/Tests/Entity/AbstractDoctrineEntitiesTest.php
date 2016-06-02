@@ -320,8 +320,12 @@ abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
             $proxyFileNames,
             'Generated proxies do not match to expected ones.'
             . (count($expectedProxyFileNames) > count($proxyFileNames)
-                ? ' Did you annotated them all as @Entity and their dirs listed in getDirsWithEntities() ? (' . var_export(array_diff($expectedProxyFileNames, $proxyFileNames), true) . ')'
-                : ' Have you listed them all by createEntitiesToPersist() ? (' . var_export(array_diff($proxyFileNames, $expectedProxyFileNames), true) . ')'
+                ? (' Did you annotated them all as @Entity and their dirs listed in getDirsWithEntities()?'
+                    . "\n" . '- expected but not generated: ' . var_export(array_diff($expectedProxyFileNames, $proxyFileNames), true)
+                )
+                : (' Have you listed them all by createEntitiesToPersist()?'
+                    . "\n" . '- generated but not expected: ' . var_export(array_diff($proxyFileNames, $expectedProxyFileNames), true)
+                )
             )
         );
 
