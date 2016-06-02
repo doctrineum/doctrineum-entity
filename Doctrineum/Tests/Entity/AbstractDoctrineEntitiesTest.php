@@ -272,7 +272,12 @@ abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
                 if (is_array($fetchedValue)) {
                     self::assertDoctrineEquals($originalValue, $fetchedValue, $message);
                 } else {
-                    self::assertEquals($originalValue, $fetchedValue);
+                    self::assertEquals(
+                        $originalValue,
+                        $fetchedValue,
+                        'Values fetched by ' . get_class($fetched) . "::{$reflectionMethod->getName()}"
+                        . ' do not match'
+                    );
                 }
             } else {
                 self::assertNull($originalValue);
