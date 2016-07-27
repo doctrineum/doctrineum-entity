@@ -132,7 +132,9 @@ abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
             $this->entityManager->flush();
         } catch (TableNotFoundException $tableNotFoundException) {
             throw new \RuntimeException(
-                $tableNotFoundException->getMessage() . ' (' . $this->getSchemaDescription() . ')'
+                $tableNotFoundException->getMessage()
+                . "\n" . 'Have you listed all dirs with entities by getDirsWithEntities() ?'
+                . "\n(" . $this->getSchemaDescription() . ')'
             );
         }
 
