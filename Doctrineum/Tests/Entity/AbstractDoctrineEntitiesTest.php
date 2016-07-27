@@ -1,6 +1,7 @@
 <?php
 namespace Doctrineum\Tests\Entity;
 
+use Doctrine\DBAL\Exception\TableNotFoundException;
 use Doctrine\DBAL\Logging\DebugStack;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
@@ -127,7 +128,13 @@ abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
         foreach ($originalEntities = (array)$this->createEntitiesToPersist() as $entityToPersist) {
             $this->entityManager->persist($entityToPersist);
         }
-        $this->entityManager->flush();
+        try {
+            $this->entityManager->flush();
+        } catch (TableNotFoundException $tableNotFoundException) {
+            throw new \RuntimeException(
+                $tableNotFoundException->getMessage() . ' (' . $this->getSchemaDescription() . ')'
+            );
+        }
 
         $originalGroupedByClass = $this->groupByClass($originalEntities);
         $originalGrouped = $this->groupById($originalGroupedByClass); // ids are set to entities after flush
@@ -296,6 +303,20 @@ abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    private function getSchemaDescription()
+    {
+        $exitCode = $this->application->run(new StringInput('orm:info'), $output = new DummyOutput());
+        if ($exitCode !== 0) {
+            return 'failed to fetch schema description: ' . $output->fetch();
+        }
+
+        return $output->fetch();
+    }
+
+    /**
+     * @param array $originalEntities
+     * @return array|string[]
+     */
     private function I_can_generate_proxies(array $originalEntities)
     {
         $exitCode = $this->application->run(
