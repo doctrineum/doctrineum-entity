@@ -136,7 +136,7 @@ abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
         $originalGroupedByClass = $this->groupByClass($originalEntities);
         $originalGrouped = $this->groupById($originalGroupedByClass); // ids are set to entities after flush
 
-        $this->entityManager->clear(); // clear disconnects all entities, but also by them containing entities
+        $this->entityManager->clear(); // 'clear' disconnects all entities, but also by-them-containing entities
 
         $fetchedEntities = (array)$this->fetchEntitiesByOriginals($originalEntities, $this->entityManager);
         self::assertCount(
