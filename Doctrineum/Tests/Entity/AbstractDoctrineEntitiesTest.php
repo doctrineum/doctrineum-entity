@@ -100,20 +100,15 @@ abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
             $this->entityManager->getConnection()->close();
         }
         if ($this->proxiesUniqueTempDir !== null) {
-            $this->removeDirectory($this->proxiesUniqueTempDir);
-        }
-    }
-
-    private function removeDirectory($dir)
-    {
-        foreach (scandir($dir) as $folder) {
-            if ($folder === '.' || $folder === '..') {
-                continue;
+            foreach (scandir($this->proxiesUniqueTempDir) as $folder) {
+                if ($folder === '.' || $folder === '..') {
+                    continue;
+                }
+                $folderFullPath = $this->proxiesUniqueTempDir . DIRECTORY_SEPARATOR . $folder;
+                unlink($folderFullPath);
             }
-            $folderFullPath = $dir . DIRECTORY_SEPARATOR . $folder;
-            unlink($folderFullPath);
+            rmdir($this->proxiesUniqueTempDir);
         }
-        rmdir($dir);
     }
 
     /**
