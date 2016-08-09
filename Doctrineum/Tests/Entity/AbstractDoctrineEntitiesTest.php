@@ -113,6 +113,7 @@ abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
+     * @coversNothing
      */
     public function I_can_persist_and_fetch_entities()
     {
