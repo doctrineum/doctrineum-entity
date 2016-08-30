@@ -240,8 +240,9 @@ abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
         }
 
         $originalReflection = new \ReflectionClass($original);
-        foreach ($originalReflection->getMethods(\ReflectionMethod::IS_PUBLIC ^ \ReflectionMethod::IS_ABSTRACT) as $reflectionMethod) {
-            if ($reflectionMethod->getNumberOfRequiredParameters() > 0
+        foreach ($originalReflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $reflectionMethod) {
+            if ($reflectionMethod->isAbstract()
+                || $reflectionMethod->getNumberOfRequiredParameters() > 0
                 || $reflectionMethod->getName() === 'getClass'
                 || strpos($reflectionMethod->getName(), '__') === 0
             ) {
