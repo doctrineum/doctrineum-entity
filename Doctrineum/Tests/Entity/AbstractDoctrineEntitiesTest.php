@@ -69,7 +69,7 @@ abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return string[]|array
+     * @return string|string[]|array
      */
     abstract protected function getDirsWithEntities();
 
