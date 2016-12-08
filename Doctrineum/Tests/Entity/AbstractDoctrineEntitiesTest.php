@@ -134,7 +134,7 @@ abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
             );
         }
 
-        $originalGroupedByClass = $this->groupByClass($originalEntities);
+        $originalGroupedByClass = $this->groupByOriginalClass($originalEntities, true /* already original */);
         $originalGrouped = $this->groupById($originalGroupedByClass); // ids are set to entities after flush
 
         $this->entityManager->clear(); // 'clear' disconnects all entities, but also by-them-containing entities
@@ -145,7 +145,7 @@ abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
             $fetchedEntities,
             "Expected {$countOfOriginals} fetched entities (same as originals)"
         );
-        $fetchedGroupedByClass = $this->groupByClass($fetchedEntities);
+        $fetchedGroupedByClass = $this->groupByOriginalClass($fetchedEntities, false/* can contains proxy names */);
         $fetchedGrouped = $this->groupById($fetchedGroupedByClass);
 
         $usedProxies = [];
@@ -189,15 +189,23 @@ abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
         $this->I_can_drop_schema();
     }
 
-    private function groupByClass(array $entities)
+    /**
+     * @param array|Entity[] $entities
+     * @param bool $givenOriginalOnly
+     * @return array
+     */
+    private function groupByOriginalClass(array $entities, $givenOriginalOnly)
     {
         $grouped = [];
         foreach ($entities as $entity) {
-            $class = get_class($entity);
-            if (!array_key_exists($class, $grouped)) {
-                $grouped[$class] = [];
+            $currentClass = get_class($entity);
+            $originalClass = $givenOriginalOnly
+                ? $currentClass
+                : preg_replace('~^DoctrineProxies[\\\]__CG__[\\\]~', '', $currentClass);
+            if (!array_key_exists($originalClass, $grouped)) {
+                $grouped[$originalClass] = [];
             }
-            $grouped[$class][] = $entity;
+            $grouped[$originalClass][] = $entity;
         }
 
         return $grouped;
