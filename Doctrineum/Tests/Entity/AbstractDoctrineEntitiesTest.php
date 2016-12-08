@@ -149,6 +149,7 @@ abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
         $fetchedGrouped = $this->groupById($fetchedGroupedByClass);
 
         $usedProxies = [];
+        /** @var Entity[] $originalGroup */
         foreach ($originalGrouped as $className => $originalGroup) {
             self::assertContains(
                 $proxyName = $this->assembleProxyNameByClass($className),
@@ -202,6 +203,11 @@ abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
         return $grouped;
     }
 
+    /**
+     * @param array|Entity[][] $entities
+     * @return array
+     * @throws \LogicException
+     */
     private function groupById(array $entities)
     {
         $grouped = [];
@@ -209,6 +215,7 @@ abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
             if (!array_key_exists($className, $grouped)) {
                 $grouped[$className] = [];
             }
+            /** @var Entity[] $entityGroup */
             foreach ($entityGroup as $entity) {
                 if (!is_callable([$entity, 'getId'])) {
                     throw new \LogicException(
