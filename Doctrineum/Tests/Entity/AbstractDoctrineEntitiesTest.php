@@ -114,6 +114,8 @@ abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @coversNothing
+     * @return Entity[][]
+     * @throws \RuntimeException
      */
     public function I_can_persist_and_fetch_entities()
     {
@@ -187,6 +189,8 @@ abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->I_can_drop_schema();
+
+        return $fetchedGrouped;
     }
 
     /**
