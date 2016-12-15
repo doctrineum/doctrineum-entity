@@ -28,7 +28,7 @@ abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
     {
         $this->checkSqlExtensionAvailability();
 
-        $paths = (array)$this->getDirsWithEntities();
+        $paths = array_unique((array)$this->getDirsWithEntities());
         $this->checkPathsExistence($paths);
         $config = Setup::createAnnotationMetadataConfiguration(
             $paths,
