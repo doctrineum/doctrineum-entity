@@ -277,6 +277,7 @@ abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
                     $fetchedValue,
                     'Fetched value by ' . get_class($fetched) . "::{$reflectionMethod->getName()}"
                     . ' has to be at least object, original is ' . get_class($originalValue)
+                    . ' (ensure that owning side has reference to it before persist))'
                 );
                 if ($fetchedValue instanceof $originalValue) {
                     self::assertInstanceOf(get_class($originalValue), $fetchedValue);
