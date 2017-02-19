@@ -7,10 +7,11 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
 use Doctrine\ORM\Tools\Setup;
 use Doctrineum\Entity\Entity;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Tests\Fixtures\DummyOutput;
 
-abstract class AbstractDoctrineEntitiesTest extends \PHPUnit_Framework_TestCase
+abstract class AbstractDoctrineEntitiesTest extends TestCase
 {
     /** @var \Symfony\Component\Console\Application */
     private $application;

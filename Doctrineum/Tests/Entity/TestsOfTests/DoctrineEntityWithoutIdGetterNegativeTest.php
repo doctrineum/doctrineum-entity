@@ -21,7 +21,7 @@ class DoctrineEntityWithoutIdGetterNegativeTest extends AbstractDoctrineEntities
     protected function getDirsWithEntities()
     {
         return [
-            __DIR__ . DIRECTORY_SEPARATOR . 'InvalidEntities'
+            __DIR__ . DIRECTORY_SEPARATOR . 'InvalidEntities',
         ];
     }
 

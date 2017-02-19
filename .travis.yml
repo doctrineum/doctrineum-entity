@@ -4,11 +4,11 @@ php:
   - hhvm
   - 7.1
   - 7.0
-  - 5.6  - 5.4
-
 matrix:
   allow_failures:
-    - php: nightly
+    - php:
+        - nightly
+        - hhvm
 
 before_script:
   - composer selfupdate

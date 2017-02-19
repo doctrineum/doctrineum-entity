@@ -9,7 +9,7 @@ class PositiveTestOfAbstractDoctrineEntitiesTest extends AbstractDoctrineEntitie
     protected function getDirsWithEntities()
     {
         return [
-            __DIR__ . DIRECTORY_SEPARATOR . 'ValidEntities'
+            __DIR__ . DIRECTORY_SEPARATOR . 'ValidEntities',
         ];
     }
 

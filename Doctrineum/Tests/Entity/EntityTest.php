@@ -1,14 +1,17 @@
 <?php
 namespace Doctrineum\Tests\Entity;
 
-class EntityTest extends \PHPUnit_Framework_TestCase
+use Doctrineum\Entity\Entity;
+use PHPUnit\Framework\TestCase;
+
+class EntityTest extends TestCase
 {
     /**
      * @test
      */
     public function I_can_use_entity()
     {
-        $reflection = new \ReflectionClass('\Doctrineum\Entity\Entity');
+        $reflection = new \ReflectionClass(Entity::class);
         self::assertTrue(
             $reflection->isInterface(),
             'Expected \Doctrineum\Entity\Entity to be interface'
