@@ -30,7 +30,5 @@
     "phpunit/phpunit": "~6.0",
     "mockery/mockery": "~0.9",
     "doctrine/orm": ">=2.5"
-  },
-  "minimum-stability": "dev",
-  "prefer-stable": true
+  }
 }
