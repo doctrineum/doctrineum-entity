@@ -8,16 +8,12 @@ class PositiveTestOfAbstractDoctrineEntitiesTest extends AbstractDoctrineEntitie
 {
     protected function getDirsWithEntities()
     {
-        return [
-            __DIR__ . DIRECTORY_SEPARATOR . 'ValidEntities',
-        ];
+        return __DIR__ . DIRECTORY_SEPARATOR . 'ValidEntities';
     }
 
-    protected function createEntitiesToPersist()
+    protected function createEntitiesToPersist(): array
     {
-        return [
-            new SomeValidEntity('foo'),
-        ];
+        return [new SomeValidEntity('foo')];
     }
 
     protected function tearDown()

@@ -25,9 +25,9 @@ class SomeValidEntity implements Entity
     /**
      * @return string
      */
-    public static function getClass()
+    public static function getClass(): string
     {
-        return get_called_class();
+        return static::class;
     }
 
     public function __construct($value)

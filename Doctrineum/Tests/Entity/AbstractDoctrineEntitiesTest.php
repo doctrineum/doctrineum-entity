@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1); // on PHP 7+ are standard PHP methods strict to types of given parameters
+
 namespace Doctrineum\Tests\Entity;
 
 use Doctrine\DBAL\Exception\TableNotFoundException;
@@ -82,7 +84,7 @@ abstract class AbstractDoctrineEntitiesTest extends TestCase
         }
     }
 
-    protected function getSqlExtensionName()
+    protected function getSqlExtensionName(): string
     {
         return 'pdo_sqlite';
     }
@@ -90,7 +92,7 @@ abstract class AbstractDoctrineEntitiesTest extends TestCase
     /**
      * @return array
      */
-    protected function getQueries()
+    protected function getQueries(): array
     {
         return $this->sqlLogger->queries;
     }
@@ -101,7 +103,7 @@ abstract class AbstractDoctrineEntitiesTest extends TestCase
             $this->entityManager->getConnection()->close();
         }
         if ($this->proxiesUniqueTempDir !== null) {
-            foreach (scandir($this->proxiesUniqueTempDir) as $folder) {
+            foreach (scandir($this->proxiesUniqueTempDir, SCANDIR_SORT_NONE) as $folder) {
                 if ($folder === '.' || $folder === '..') {
                     continue;
                 }
@@ -118,7 +120,7 @@ abstract class AbstractDoctrineEntitiesTest extends TestCase
      * @return Entity[][]
      * @throws \RuntimeException
      */
-    public function I_can_persist_and_fetch_entities()
+    public function I_can_persist_and_fetch_entities(): array
     {
         $this->I_can_create_schema();
         $originalEntities = (array)$this->createEntitiesToPersist();
@@ -199,7 +201,7 @@ abstract class AbstractDoctrineEntitiesTest extends TestCase
      * @param bool $givenOriginalOnly
      * @return array
      */
-    private function groupByOriginalClass(array $entities, $givenOriginalOnly)
+    private function groupByOriginalClass(array $entities, bool $givenOriginalOnly): array
     {
         $grouped = [];
         foreach ($entities as $entity) {
@@ -221,7 +223,7 @@ abstract class AbstractDoctrineEntitiesTest extends TestCase
      * @return array
      * @throws \LogicException
      */
-    private function groupById(array $entities)
+    private function groupById(array $entities): array
     {
         $grouped = [];
         foreach ($entities as $className => $entityGroup) {
@@ -337,7 +339,7 @@ abstract class AbstractDoctrineEntitiesTest extends TestCase
      * @param array $originalEntities
      * @return array|string[]
      */
-    private function I_can_generate_proxies(array $originalEntities)
+    private function I_can_generate_proxies(array $originalEntities): array
     {
         $exitCode = $this->application->run(
             new StringInput('orm:generate:proxies'),
@@ -347,7 +349,7 @@ abstract class AbstractDoctrineEntitiesTest extends TestCase
 
         $proxyFileNames = array_merge( // rebuilding array to reset keys
             array_filter(
-                scandir($this->getProxiesUniqueTempDir()),
+                scandir($this->getProxiesUniqueTempDir(), SCANDIR_SORT_NONE),
                 function ($folderName) {
                     return $folderName !== '.' && $folderName !== '..';
                 }
@@ -378,7 +380,7 @@ abstract class AbstractDoctrineEntitiesTest extends TestCase
         return $expectedProxyFileNames;
     }
 
-    protected function assembleProxyNameByClass($class)
+    protected function assembleProxyNameByClass(string $class): string
     {
         return '__CG__' . str_replace('\\', '', $class) . '.php';
     }
@@ -386,13 +388,13 @@ abstract class AbstractDoctrineEntitiesTest extends TestCase
     /**
      * @return array|Entity[]
      */
-    abstract protected function createEntitiesToPersist();
+    abstract protected function createEntitiesToPersist(): array;
 
     /**
      * @param array|Entity[] $instances
      * @return array|string[]
      */
-    protected function extractUniqueEntityClasses(array $instances)
+    protected function extractUniqueEntityClasses(array $instances): array
     {
         $classes = [];
         foreach ($instances as $instance) {
@@ -407,7 +409,7 @@ abstract class AbstractDoctrineEntitiesTest extends TestCase
      * @param EntityManager $entityManager
      * @return array|Entity[]
      */
-    protected function fetchEntitiesByOriginals(array $originalEntities, EntityManager $entityManager)
+    protected function fetchEntitiesByOriginals(array $originalEntities, EntityManager $entityManager): array
     {
         $fetched = [];
         foreach ($originalEntities as $originalEntity) {
@@ -421,7 +423,7 @@ abstract class AbstractDoctrineEntitiesTest extends TestCase
     /**
      * @return string
      */
-    private function getProxiesUniqueTempDir()
+    private function getProxiesUniqueTempDir(): string
     {
         if ($this->proxiesUniqueTempDir === null) {
             $this->proxiesUniqueTempDir = sys_get_temp_dir() . '/' . uniqid('orm-proxies-test-', true);

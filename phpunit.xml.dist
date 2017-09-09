@@ -12,11 +12,11 @@
         colors="true"
 >
     <testsuite name="all">
-        <directory>./Doctrineum</directory>
+        <directory>./Doctrineum/Tests</directory>
     </testsuite>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true" addUncoveredFilesFromWhitelist="true">
-            <directory>./Doctrineum</directory>
+            <directory>./Doctrineum/Entity</directory>
         </whitelist>
     </filter>
 </phpunit>

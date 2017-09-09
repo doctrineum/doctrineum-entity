@@ -13,9 +13,9 @@ class DoctrineEntityWithoutIdGetterNegativeTest extends AbstractDoctrineEntities
      * @expectedExceptionMessageRegExp ~getId~
      * @codeCoverageIgnore
      */
-    public function I_can_persist_and_fetch_entities()
+    public function I_can_persist_and_fetch_entities(): array
     {
-        parent::I_can_persist_and_fetch_entities();
+        return parent::I_can_persist_and_fetch_entities();
     }
 
     protected function getDirsWithEntities()
@@ -25,11 +25,9 @@ class DoctrineEntityWithoutIdGetterNegativeTest extends AbstractDoctrineEntities
         ];
     }
 
-    protected function createEntitiesToPersist()
+    protected function createEntitiesToPersist(): array
     {
-        return [
-            new EntityWithoutIdGetter('foo'),
-        ];
+        return [new EntityWithoutIdGetter()];
     }
 
     /**
@@ -37,7 +35,7 @@ class DoctrineEntityWithoutIdGetterNegativeTest extends AbstractDoctrineEntities
      * @param EntityManager $entityManager
      * @codeCoverageIgnore
      */
-    protected function fetchEntitiesByOriginals(array $originalEntities, EntityManager $entityManager)
+    protected function fetchEntitiesByOriginals(array $originalEntities, EntityManager $entityManager): array
     {
         throw new \LogicException('Should not reach this code');
     }

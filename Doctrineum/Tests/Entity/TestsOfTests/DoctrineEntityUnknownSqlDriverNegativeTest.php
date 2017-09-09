@@ -9,7 +9,7 @@ use Doctrineum\Tests\Entity\AbstractDoctrineEntitiesTest;
  */
 class DoctrineEntityUnknownSqlDriverNegativeTest extends AbstractDoctrineEntitiesTest
 {
-    protected function getSqlExtensionName()
+    protected function getSqlExtensionName(): string
     {
         return 'nonsenseSql';
     }
@@ -19,12 +19,12 @@ class DoctrineEntityUnknownSqlDriverNegativeTest extends AbstractDoctrineEntitie
         throw new \LogicException('Should not reach this code');
     }
 
-    protected function createEntitiesToPersist()
+    protected function createEntitiesToPersist(): array
     {
         throw new \LogicException('Should not reach this code');
     }
 
-    protected function fetchEntitiesByOriginals(array $originalEntities, EntityManager $entityManager)
+    protected function fetchEntitiesByOriginals(array $originalEntities, EntityManager $entityManager): array
     {
         throw new \LogicException('Should not reach this code');
     }
