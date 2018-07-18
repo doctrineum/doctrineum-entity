@@ -8,18 +8,19 @@ class EntityTest extends TestCase
 {
     /**
      * @test
+     * @throws \ReflectionException
      */
-    public function I_can_use_entity()
+    public function I_can_use_entity(): void
     {
         $reflection = new \ReflectionClass(Entity::class);
         self::assertTrue(
             $reflection->isInterface(),
-            'Expected \Doctrineum\Entity\Entity to be interface'
+            'Expected ' . Entity::class . ' to be an interface'
         );
         $methods = $reflection->getMethods();
         self::assertCount(1, $methods, 'Expected just a single method');
         /** @var \ReflectionMethod $method */
-        $method = current($methods);
+        $method = \current($methods);
         self::assertSame('getId', $method->getName(), "Expected 'getId' method name");
     }
 }
